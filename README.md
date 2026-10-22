@@ -1,5 +1,10 @@
 # Netflix Plugin for Kodi (plugin.video.netflix)
 
+This fork tests the add-on on an Alneo TV with a Hi3751V350 processor and OpenGL ES 2.0. It includes [lekma's 2.0.6 community updates](https://github.com/lekma/plugin.video.netflix/releases/tag/2.0.6) and fixes concurrent database creation when Kodi starts the Netflix service and menu together.
+
+Kodi 22 RC1 supports account login, profiles and episode browsing on the test TV. Using this TV’s own details in the mobile-client identity format fixes the DRM key exchange (error 207006). Account authentication still blocks the mobile path; a separate web-session experiment reached the video manifest but failed licensing with error 1044. No protected video playback has been verified. See [the DRM investigation](docs/alneo-drm-investigation.md) for the configuration and test results. This fork does not add Widevine L1 support or promise HD. See [PROGRESS.md](PROGRESS.md) for test results and remaining work.
+
+
 [![Kodi version](https://img.shields.io/badge/kodi%20versions-19--20--21--22-blue)](https://kodi.tv/)
 [![GitHub release](https://img.shields.io/github/release/castagnait/plugin.video.netflix.svg)](https://github.com/castagnait/plugin.video.netflix/releases)
 [![CI](https://github.com/castagnait/plugin.video.netflix/workflows/CI/badge.svg)](https://github.com/castagnait/plugin.video.netflix/actions?query=workflow:CI)
