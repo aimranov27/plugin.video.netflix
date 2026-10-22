@@ -1,5 +1,13 @@
 # Progress
 
+## 2026-10-22 — DRM handshake diagnosis
+
+Confirmed that the TV-format identity causes error 207006 on the recovered Alneo. Using its own hardware details in the mobile `NFANDROID1-PRV-B-L3-` format passes key exchange and loads the returned keys. The comparison was repeated with the same identifier suffix. This is an existing ESN configuration option, so no production code change was needed. See [the investigation record](docs/alneo-drm-investigation.md).
+
+Playback remains blocked: the mobile path's stored email/password was rejected (205007), and the add-on then cleared those saved credentials. Web cookies used with the mobile identity fail identity validation (205032). A separate browser-identity/RSA experiment authenticated and loaded manifests for two titles, but both license requests failed with 1044; DRM pre-initialization did not resolve that error. InputStream Adaptive loaded and parsed the manifests. No protected playback or resolution is verified.
+
+Restored all temporary code changes on the TV and kept the verified mobile ESN configuration, automatic regeneration disabled, and a fresh Android Widevine session. Next: establish whether the prior login used an email code, test account-password authentication directly on the TV, and then test playback. No firmware, system packages, donor credentials or the other TV were changed. The main tv-setup checkout is unchanged.
+
 ## 2026-10-22 — Alneo Kodi test
 
 Based on CastagnaIT master 7accc24c and lekma 2.0.6 at 3c5767d3. The imported community commits update Netflix website login, profiles and browsing; they are not original work by this fork.
