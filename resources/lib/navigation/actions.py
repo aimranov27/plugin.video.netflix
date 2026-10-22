@@ -148,7 +148,7 @@ class AddonActionExecutor:
         is_mylist = common.WndHomeProps[common.WndHomeProps.CURRENT_DIRECTORY_MENU_ID] == 'myList'
         if operation == 'remove' and is_mylist:
             common.json_rpc('Input.Down')  # Avoids selection back to the top
-            common.container_refresh()
+        common.container_refresh()
 
     @common.inject_video_id(path_offset=1)
     def remind_me(self, videoid):

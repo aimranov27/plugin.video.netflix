@@ -98,10 +98,8 @@ class AMPlayback(ActionManager):
         if not watched_by_percent and not watched_by_threshold:
             return
         if G.ADDON.getSettingBool('sync_watched_status') and not self.is_played_from_strm:
-            profile_guid = G.LOCAL_DB.get_active_profile_guid()
-            G.SHARED_DB.set_watched_status(profile_guid, self.videoid.value, True)
             G.CACHE.delete(CACHE_INFOLABELS, f'{self.videoid.value}_{G.LOCAL_DB.get_profile_config("language", "")}')
-            G.CACHE.delete(CACHE_BOOKMARKS, self.videoid.value)
+            G.CACHE.add(CACHE_BOOKMARKS, self.videoid.value, player_state['current_pts'])
             LOG.info('Has been fixed the local watched status of the video: {}', self.videoid)
             return
         if self.is_played_from_strm:

@@ -2,7 +2,7 @@
 
 This fork tests the add-on on an Alneo TV with a Hi3751V350 processor and OpenGL ES 2.0. It includes [lekma's 2.0.6 community updates](https://github.com/lekma/plugin.video.netflix/releases/tag/2.0.6) and fixes concurrent database creation when Kodi starts the Netflix service and menu together.
 
-Kodi 22 RC1 reaches the login screen on the test TV. Account login and sustained playback are not yet verified. This fork does not add Widevine L1 support or promise HD. See [PROGRESS.md](PROGRESS.md) for test results and remaining work.
+Kodi 22 RC1 supports account login, profiles and episode browsing on the test TV. Playback currently fails at the DRM key exchange (Netflix error 207006); no protected video playback has been verified. This fork does not add Widevine L1 support or promise HD. See [PROGRESS.md](PROGRESS.md) for test results and remaining work.
 
 
 [![Kodi version](https://img.shields.io/badge/kodi%20versions-19--20--21--22-blue)](https://kodi.tv/)

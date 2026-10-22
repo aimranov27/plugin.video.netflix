@@ -1846,18 +1846,32 @@ class DirectoryPathRequests:
 
 
     def _req_episodes_graphql(self, videoid):
-        data = self._post_graphql(
-            'PreviewModalEpisodeSelectorSeasonEpisodes',
-            {
-                'seasonId': int(videoid.seasonid),
-                'count': 50,
-                'opaqueImageFormat': 'JPG',
-                'artworkContext': {}
-            },
-            GRAPHQL_OP_EPISODES)
-        season_data = data['videos'][0]
+        count = 50
+        previous_count = 0
+        while True:
+            data = self._post_graphql(
+                'PreviewModalEpisodeSelectorSeasonEpisodes',
+                {
+                    'seasonId': int(videoid.seasonid),
+                    'count': count,
+                    'opaqueImageFormat': 'JPG',
+                    'artworkContext': {}
+                },
+                GRAPHQL_OP_EPISODES)
+            season_data = data['videos'][0]
+            connection = season_data['episodes']
+            edges = connection['edges']
+            page_info = connection.get('pageInfo') or {}
+            if page_info.get('hasNextPage') is False:
+                break
+            if previous_count and len(edges) <= previous_count:
+                # A server-side cap needs the existing paginated path fallback.
+                raise ValueError('Episode selector stopped before confirming the end of the season')
+            if len(edges) < count and not page_info.get('hasNextPage'):
+                break
+            previous_count = len(edges)
+            count *= 2
         season_number = season_data.get('number')
-        edges = season_data['episodes']['edges']
         metadata_by_id = self._metadata_episodes_by_id(videoid)
         episodes = OrderedDict(
             _episode_node_to_item(edge.get('node') or edge, season_number,

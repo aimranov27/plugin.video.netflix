@@ -11,7 +11,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import resources.lib.common as common
 from resources.lib.utils.data_types import merge_data_type, CustomVideoList
-from resources.lib.common.cache_utils import CACHE_COMMON
+from resources.lib.common.cache_utils import CACHE_COMMON, CACHE_MYLIST
 from resources.lib.common.exceptions import CacheMiss, InvalidPathError, InvalidVideoListTypeError
 from resources.lib.common import VideoId
 from resources.lib.globals import G
@@ -408,9 +408,13 @@ class DirectoryBuilder(DirectoryPathRequests):
     @measure_exec_time_decorator(is_immediate=True)
     def get_video_list_search(self, pathitems, menu_data, search_term, perpetual_range_start, path_params=None):
         video_list = self.req_video_list_search(search_term, perpetual_range_start=perpetual_range_start)
-        # Search already uses browser GraphQL result art. Extra metadata/My List lookups can exceed the IPC timeout.
+        # Reuse membership without adding a network request to the search IPC call.
+        try:
+            mylist_items = G.CACHE.get(CACHE_MYLIST, 'my_list_items')
+        except CacheMiss:
+            mylist_items = []
         return build_video_listing(video_list, menu_data,
-                                   pathitems=pathitems, mylist_items=[], path_params=path_params)
+                                   pathitems=pathitems, mylist_items=mylist_items, path_params=path_params)
 
     @measure_exec_time_decorator(is_immediate=True)
     def get_genres(self, menu_data, genre_id, force_use_videolist_id):
